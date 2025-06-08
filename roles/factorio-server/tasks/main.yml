@@ -144,7 +144,8 @@
     owner: "{{ factorioserver_service_username }}"
     group: "{{ factorioserver_service_username }}"
   tags:
-    - create-save
+    - init
+    - save
     - never
 
 - name: Create save from file
@@ -159,7 +160,7 @@
     - Restart factorio
   tags:
     - init
-    - create-save
+    - save
     - never
 
 - name: Create save from file
@@ -173,5 +174,5 @@
     - Restart factorio
   tags:
     - init
-    - create-save
+    - save
     - never
