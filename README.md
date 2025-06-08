@@ -1,6 +1,8 @@
 # Ansible repository for setting up factorio server
 All of the ansible is in a role in `roles/factorio-server`.
 
+Ansible core version tested on: `2.18.6`
+
 ## To use this roles as it is
 ### First run
 #### Create inventory file
