@@ -1,3 +1,13 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # handlers file for factorio-server
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart factorio
+  ansible.builtin.systemd:
+    name: factorio
+    state: reloaded
+    enabled: true

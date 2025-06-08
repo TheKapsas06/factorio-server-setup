@@ -1,0 +1,4 @@
+- name: Setup factorio server
+  hosts: all
+  roles:
+    - factorio-server

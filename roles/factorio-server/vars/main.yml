@@ -1,3 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # vars file for factorio-server
+factorioserver_version: 2.0.47

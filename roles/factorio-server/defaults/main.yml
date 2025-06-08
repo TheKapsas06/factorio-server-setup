@@ -1,3 +1,56 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # defaults file for factorio-server
+
+# Server name
+factorioserver_name: "Cool server"
+factorioserver_description: "Cool server"
+factorioserver_tags:
+  - "{{ factorioserver_version }}"
+  - "space age"
+
+# Limit factorio players
+factorioserver_player_limit: 6
+
+# Visability of the game
+factorioserver_visability:
+  public: false
+  lan: true
+
+# When you set Visability public to true you need to add factorio creds.
+# You can either use the token or the username and password combo.
+# Defaults to empty string in config file.
+#
+# factorioserver_creds:
+#   username: "your username"
+#   password: "your password"
+#   token: "your token"
+
+# Password for the server
+factorioserver_server_password: "Factorio.123!"
+
+# Legitemate user check
+factorioserver_user_verification: "false"
+
+# Auto pause game when users are not present
+factorioserver_auto_pause: "true"
+
+# Auto saves don't block the game (UNIX only) (Highly experimental)
+factorioserver_no_block_save: "true"
+
+factorioserver_mods:
+  - name: base
+    enabled: true
+  - name: elevated-rails
+    enabled: true
+  - name: quality
+    enabled: true
+  - name: space-age
+    enabled: true
+
+# Default paths for factorio
+factorioserver_base_path: "/opt/factorio"
+factorioserver_log_path: "/var/log/factorio.log"
+
+# User to run factorio server
+factorioserver_service_username: factorio

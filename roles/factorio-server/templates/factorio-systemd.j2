@@ -1,0 +1,13 @@
+[Unit]
+Description=Factorio Server
+After=network.target
+
+[Service]
+User={{ factorioserver_service_username }}
+ExecStart={{ factorioserver_base_path }}/bin/x64/factorio --server-settings {{ factorioserver_base_path }}/data/server-settings.json --start-server-load-latest --console-log {{ factorioserver_log_path }}
+WorkingDirectory={{ factorioserver_base_path }}
+Restart=always
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

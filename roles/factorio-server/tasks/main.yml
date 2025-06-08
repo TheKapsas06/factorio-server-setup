@@ -1,3 +1,177 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for factorio-server
+
+- name: Create group for factorio service user
+  ansible.builtin.group:
+    name: "{{ factorioserver_service_username }}"
+    system: true
+  tags:
+    - init
+    - user
+
+- name: Create factorio service user
+  ansible.builtin.user:
+    name: "{{ factorioserver_service_username }}"
+    system: true
+    home: "{{ factorioserver_base_path }}"
+    skeleton: false
+    shell: "/usr/sbin/nologin"
+    group: "{{ factorioserver_service_username }}"
+  tags:
+    - init
+    - user
+
+- name: Give permissions to factorio user base path
+  ansible.builtin.file:
+    path: "{{ factorioserver_base_path }}"
+    recurse: true
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+  tags:
+    - init
+    - user
+    - permissions
+
+- name: Give permmisions to factorio user log file
+  ansible.builtin.file:
+    path: "{{ factorioserver_log_path }}"
+    state: touch
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+    mode: "0644"
+  tags:
+    - init
+    - user
+    - permissions
+
+- name: Download server
+  ansible.builtin.get_url:
+    url: https://www.factorio.com/get-download/{{ factorioserver_version }}/headless/linux64
+    dest: "{{ factorioserver_base_path }}/factorio-headless_linux_{{ factorioserver_version }}.tar.xz"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+    mode: "0640"
+  tags:
+    - init
+    - download
+    - never
+
+- name: Unpack factorio server tar
+  ansible.builtin.unarchive:
+    src: "{{ factorioserver_base_path }}/factorio-headless_linux_{{ factorioserver_version }}.tar.xz"
+    remote_src: true
+    dest: "{{ factorioserver_base_path }}"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+    extra_opts:
+      - "--strip-components=1"
+  tags:
+    - init
+    - download
+    - never
+
+- name: Create mods folder
+  ansible.builtin.file:
+    state: directory
+    path: "{{ factorioserver_base_path }}/mods"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+    mode: "0755"
+  notify:
+    - Restart factorio
+  tags:
+    - init
+    - service
+
+- name: Create saves folder
+  ansible.builtin.file:
+    state: directory
+    path: "{{ factorioserver_base_path }}/saves"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+    mode: "0755"
+  notify:
+    - Restart factorio
+  tags:
+    - init
+    - service
+
+- name: Create factorio mod list
+  ansible.builtin.template:
+    src: mod-list.json.j2
+    dest: "{{ factorioserver_base_path }}/mods/mod-list.json"
+    mode: "0644"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+  notify:
+    - Restart factorio
+  tags:
+    - init
+    - service
+
+- name: Create factorio systemd file
+  ansible.builtin.template:
+    src: factorio-systemd.j2
+    dest: /usr/lib/systemd/system/factorio.service
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Reload systemd
+    - Restart factorio
+  tags:
+    - init
+    - service
+
+- name: Add server settings file
+  ansible.builtin.template:
+    src: server-settings.json.j2
+    dest: "{{ factorioserver_base_path }}/data/server-settings.json"
+    mode: "0640"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+  notify:
+    - Restart factorio
+  tags:
+    - init
+    - service
+
+- name: Create save folder
+  ansible.builtin.file:
+    path: "{{ factorioserver_base_path }}/saves"
+    mode: "0755"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+  tags:
+    - create-save
+    - never
+
+- name: Create save from file
+  ansible.builtin.copy:
+    src: save.zip
+    dest: "{{ factorioserver_base_path }}/saves/save.zip"
+    mode: "0644"
+    owner: "{{ factorioserver_service_username }}"
+    group: "{{ factorioserver_service_username }}"
+  when: '"from_file" == factorioserver_save'
+  notify:
+    - Restart factorio
+  tags:
+    - init
+    - create-save
+    - never
+
+- name: Create save from file
+  ansible.builtin.command:
+    cmd: "{{ factorioserver_base_path }}/bin/x64/factorio --create {{ factorioserver_base_path }}/saves/save"
+  changed_when: true
+  become: true
+  become_user: "{{ factorioserver_service_username }}"
+  when: '"create_new" == factorioserver_save'
+  notify:
+    - Restart factorio
+  tags:
+    - init
+    - create-save
+    - never
