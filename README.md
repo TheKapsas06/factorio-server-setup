@@ -11,10 +11,12 @@ You can also create `inventory/group_vars` for variables or create variable stra
 
 #### Run playbook
 When running this playbook for the first time run it with the tag `init`.
+> If you have existing factorio save file you can add it to `roles/factorio-server/files/save.zip` and changed the variables `factorioserver_save` to `from_file`
 ```
 ansible-playbook setup-factorio.yaml -t init
 ```
 This way it will also init the save file with zero touch install.
+
 
 ### Second run
 For the second run don't use the `init` tag.
