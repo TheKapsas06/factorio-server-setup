@@ -54,3 +54,8 @@ factorioserver_log_path: "/var/log/factorio.log"
 
 # User to run factorio server
 factorioserver_service_username: factorio
+
+# How to create a new save for the server
+# from_file: Gets the file from files/ folder with the name save.zip
+# create_new: Creates a new blank save
+factorioserver_save: "create_new"
