@@ -14,7 +14,7 @@ Role Variables
 
 All variables are commented in `defaults/main.yaml`\
 `factorioserver_version` variable is the only excpetion and is held in `vars/main.yaml`
-With this variables you can control the version of version that exists.
+With this variables you can control the version of factorio that is being installed.
 
 Dependencies
 ------------
