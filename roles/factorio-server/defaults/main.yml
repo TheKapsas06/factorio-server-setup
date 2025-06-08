@@ -3,8 +3,8 @@
 # defaults file for factorio-server
 
 # Server name
-factorioserver_name: "Cool server"
-factorioserver_description: "Cool server"
+factorioserver_name: "My Factorio Server"
+factorioserver_description: "My Factorio Server"
 factorioserver_tags:
   - "{{ factorioserver_version }}"
   - "space age"
@@ -27,7 +27,7 @@ factorioserver_visability:
 #   token: "your token"
 
 # Password for the server
-factorioserver_server_password: "Factorio.123!"
+factorioserver_server_password: ""
 
 # Legitemate user check
 factorioserver_user_verification: "false"
