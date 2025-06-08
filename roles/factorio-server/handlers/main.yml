@@ -9,5 +9,5 @@
 - name: Restart factorio
   ansible.builtin.systemd:
     name: factorio
-    state: reloaded
+    state: restarted
     enabled: true
